@@ -1,0 +1,19 @@
+{
+  "name": "LoLData",
+  "version": "0.0.0",
+  "authors": [
+    "Phil Swanson <swanson.p@gmail.com>"
+  ],
+  "description": "Contains simple static data for LoL",
+  "keywords": [
+    "LoL"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
