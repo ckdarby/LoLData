@@ -1,5 +1,7 @@
 var gulp = require('gulp');
-var plugins = require('gulp-load-plugins')({lazy:false});
+var plugins = require('gulp-load-plugins')({
+    lazy: false
+});
 var del = require('del');
 var es = require('event-stream');
 var bowerFiles = require('main-bower-files');
@@ -10,18 +12,17 @@ var Q = require('q');
 
 var moduleName = "LolData";
 
-var paths = {
-    module: "src/**/*",
-    scripts: 'src/**/*.js',
-    styles: ['./src/**/*.css', './src/**/*.scss'],
-    media: './media/**/*',
-    index: './src/index.html',
-    partials: ['src/**/*.html', '!src/index.html'],
-    distDev: './dist.dev',
-    distProd: './dist.prod',
-    distScriptsProd: './dist.prod/scripts',
-    scriptsDevServer: 'devServer/**/*.js'
-};
+var paths = {};
+paths.module = "src/**/*",
+paths.scripts = 'src/**/*.js'
+paths.styles = ['./src/**/*.css', './src/**/*.scss']
+paths.media = './media/**/*'
+paths.index = './src/index.html'
+paths.partials = ['src/**/*.html', '!src/index.html']
+paths.distDev = './dev'
+paths.distProd = './dist'
+paths.distScriptsProd = paths.distProd + '/scripts'
+
 
 // == PIPE SEGMENTS ========
 
@@ -38,7 +39,7 @@ pipes.orderedAppScripts = function() {
 };
 
 pipes.minifiedFileName = function() {
-    return plugins.rename(function (path) {
+    return plugins.rename(function(path) {
         path.extname = '.min' + path.extname;
     });
 };
@@ -61,8 +62,8 @@ pipes.builtAppScriptsProd = function() {
     return es.merge(scriptedPartials, validatedAppScripts)
         .pipe(pipes.orderedAppScripts())
         .pipe(plugins.sourcemaps.init())
-        .pipe(plugins.concat( moduleName + '.min.js'))
-        //.pipe(plugins.uglify())
+        .pipe(plugins.concat(moduleName + '.min.js'))
+        .pipe(plugins.uglify())
         .pipe(plugins.sourcemaps.write())
         .pipe(gulp.dest(paths.distScriptsProd));
 };
@@ -88,7 +89,9 @@ pipes.validatedDevServerScripts = function() {
 
 pipes.validatedPartials = function() {
     return gulp.src(paths.partials)
-        .pipe(plugins.htmlhint({'doctype-first': false}))
+        .pipe(plugins.htmlhint({
+            'doctype-first': false
+        }))
         .pipe(plugins.htmlhint.reporter());
 };
 
@@ -100,7 +103,10 @@ pipes.builtPartialsDev = function() {
 pipes.scriptedPartials = function() {
     return pipes.validatedPartials()
         .pipe(plugins.htmlhint.failReporter())
-        .pipe(plugins.htmlmin({collapseWhitespace: true, removeComments: true}))
+        .pipe(plugins.htmlmin({
+            collapseWhitespace: true,
+            removeComments: true
+        }))
         .pipe(plugins.ngHtml2js({
             moduleName: moduleName
         }));
@@ -150,9 +156,16 @@ pipes.builtIndexDev = function() {
 
     return pipes.validatedIndex()
         .pipe(gulp.dest(paths.distDev)) // write first to get relative path for inject
-        .pipe(plugins.inject(orderedVendorScripts, {relative: true, name: 'bower'}))
-        .pipe(plugins.inject(orderedAppScripts, {relative: true}))
-        .pipe(plugins.inject(appStyles, {relative: true}))
+        .pipe(plugins.inject(orderedVendorScripts, {
+            relative: true,
+            name: 'bower'
+        }))
+        .pipe(plugins.inject(orderedAppScripts, {
+            relative: true
+        }))
+        .pipe(plugins.inject(appStyles, {
+            relative: true
+        }))
         .pipe(gulp.dest(paths.distDev));
 };
 
@@ -164,10 +177,20 @@ pipes.builtIndexProd = function() {
 
     return pipes.validatedIndex()
         .pipe(gulp.dest(paths.distProd)) // write first to get relative path for inject
-        .pipe(plugins.inject(vendorScripts, {relative: true, name: 'bower'}))
-        .pipe(plugins.inject(appScripts, {relative: true}))
-        .pipe(plugins.inject(appStyles, {relative: true}))
-        .pipe(plugins.htmlmin({collapseWhitespace: true, removeComments: true}))
+        .pipe(plugins.inject(vendorScripts, {
+            relative: true,
+            name: 'bower'
+        }))
+        .pipe(plugins.inject(appScripts, {
+            relative: true
+        }))
+        .pipe(plugins.inject(appStyles, {
+            relative: true
+        }))
+        .pipe(plugins.htmlmin({
+            collapseWhitespace: true,
+            removeComments: true
+        }))
         .pipe(gulp.dest(paths.distProd));
 };
 
@@ -259,23 +282,8 @@ gulp.task('build-app', ['build-app-dev', 'build-app-prod']);
 // clean, build, and watch live changes to the dev environment
 gulp.task('watch-dev', function() {
 
-       // watch index
-    gulp.watch(paths.index, function() {
-        return pipes.builtAppDev();
-    });
-
-    // watch app scripts
-    gulp.watch(paths.scripts, function() {
-        return pipes.builtAppDev();
-    });
-
-    // watch html partials
-    gulp.watch(paths.partials, function() {
-        return pipes.builtAppDev();
-    });
-
-    // watch styles
-    gulp.watch(paths.styles, function() {
+    // watch app
+    gulp.watch(paths.module, function() {
         return pipes.builtAppDev();
     });
 
@@ -284,25 +292,9 @@ gulp.task('watch-dev', function() {
 // clean, build, and watch live changes to the prod environment
 gulp.task('watch-prod', function() {
 
-    
-    // watch index
-    gulp.watch(paths.index, function() {
-        return pipes.builtIndexProd();
-    });
-
-    // watch app scripts
-    gulp.watch(paths.scripts, function() {
-        return pipes.builtAppScriptsProd();
-    });
-
-    // watch hhtml partials
-    gulp.watch(paths.partials, function() {
-        return pipes.builtAppScriptsProd();
-    });
-
-    // watch styles
-    gulp.watch(paths.styles, function() {
-        return pipes.builtStylesProd();
+    // watch app
+    gulp.watch(paths.module, function() {
+        return pipes.builtAppProd();
     });
 
 });

@@ -3,7 +3,7 @@
 
     /* Services */
 
-    var LoLData = angular.module('gamerbet-lol', [])
+    var LoLData = angular.module('LoLData', [])
         .constant('LoLData', {
             champion_name_ids: {
                 1: 'Annie',
