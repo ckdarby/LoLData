@@ -5,6 +5,7 @@
     "Phil Swanson <swanson.p@gmail.com>"
   ],
   "description": "Contains simple static data for LoL",
+  "main": ["./dist/scripts/LoLData.min.js"],
   "keywords": [
     "LoL"
   ],
