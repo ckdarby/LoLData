@@ -8,12 +8,15 @@ var Q = require('q');
 
 // == PATH STRINGS ========
 
+var moduleName = "LolData";
+
 var paths = {
-    scripts: 'app/**/*.js',
-    styles: ['./app/**/*.css', './app/**/*.scss'],
+    module: "src/**/*",
+    scripts: 'src/**/*.js',
+    styles: ['./src/**/*.css', './src/**/*.scss'],
     media: './media/**/*',
-    index: './app/index.html',
-    partials: ['app/**/*.html', '!app/index.html'],
+    index: './src/index.html',
+    partials: ['src/**/*.html', '!src/index.html'],
     distDev: './dist.dev',
     distProd: './dist.prod',
     distScriptsProd: './dist.prod/scripts',
@@ -58,7 +61,7 @@ pipes.builtAppScriptsProd = function() {
     return es.merge(scriptedPartials, validatedAppScripts)
         .pipe(pipes.orderedAppScripts())
         .pipe(plugins.sourcemaps.init())
-        .pipe(plugins.concat('app.min.js'))
+        .pipe(plugins.concat( moduleName + '.min.js'))
         //.pipe(plugins.uglify())
         .pipe(plugins.sourcemaps.write())
         .pipe(gulp.dest(paths.distScriptsProd));
@@ -99,7 +102,7 @@ pipes.scriptedPartials = function() {
         .pipe(plugins.htmlhint.failReporter())
         .pipe(plugins.htmlmin({collapseWhitespace: true, removeComments: true}))
         .pipe(plugins.ngHtml2js({
-            moduleName: "LoLData"
+            moduleName: moduleName
         }));
 };
 
@@ -257,7 +260,7 @@ gulp.task('build-app', ['build-app-dev', 'build-app-prod']);
 gulp.task('watch-dev', function() {
 
        // watch index
-    gulp.watch("app/**/*", function() {
+    gulp.watch(paths.index, function() {
         return pipes.builtAppDev();
     });
 
