@@ -120,15 +120,18 @@
                 161: "Velkoz",
                 201: 'Braum',
                 222: 'Jinx',
+                223: 'TahmKench',
                 236: 'Lucian',
                 238: 'Zed',
+                245: 'Ekko',
                 254: 'Vi',
                 266: 'Aatrox',
                 267: 'Nami',
                 268: 'Azir',
                 412: 'Thresh',
                 421: "RekSai",
-                429: 'Kalista'
+                429: 'Kalista',
+                432: "Bard"
             }
         })
 }());
