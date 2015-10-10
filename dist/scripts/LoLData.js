@@ -1,11 +1,12 @@
-(function () {
+(function() {
     'use strict';
 
     /* Services */
 
     var LoLData = angular.module('LoLData', [])
-        .constant('LoLData', {
-            champion_name_ids: {
+        .constant("API.Version", "5.18.1")
+        .service('LoLData', ["API.Version", function(version) {
+            var champion_name_ids: {
                 1: 'Annie',
                 2: 'Olaf',
                 3: 'Galio',
@@ -133,5 +134,17 @@
                 429: 'Kalista',
                 432: "Bard"
             }
-        })
+
+            this.getChampNameById = function(id) {
+                return champion_name_ids[id]
+            }
+
+            this.getChampImgUrlById = function(id) {
+                var name = getChampNameById(id)
+                if (!name) return
+                return "http://ddragon.leagueoflegends.com/cdn/" + version + "/img/champion/" + name + ".png"
+            }
+
+            return this
+        }])
 }());

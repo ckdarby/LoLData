@@ -1,5 +1,12 @@
 {
-  "name": "client",
+  "name": "LoLData",
+  "version": "0.0.0",
+  "description": "A small set of LoL Static data to avoid querying Riot's API",
+  "main": "dist/scripts/LoLData.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/PhilSwanson/LoLData.git"
+  },
   "devDependencies": {
     "body-parser": "^1.13.3",
     "bower": "^1.5.2",
